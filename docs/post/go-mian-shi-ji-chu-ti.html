@@ -4,7 +4,7 @@
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
     <link rel="icon" href="https://img0.baidu.com/it/u=832630795,3892809214&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1713286800&t=9552039a9805a2440c7e05e97cff1059"><script>
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
@@ -367,8 +367,10 @@ Go的标准库提供了testing包，它支持单元测试、基准测试、性�
 <p>答案：<br>
 Go提供了多种并发原语，包括goroutines、channels、互斥锁（sync.Mutex）、等待组（sync.WaitGroup）、条件变量（sync.Cond）、原子操作（sync/atomic）和一次性锁（sync.Once）等。这些原语使得并发编程在Go中变得简单而高效。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
+
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
+
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="http://tst.lingdyl.cn"> BarnabyCharles </a>
 <p><a href="https://beian.miit.gov.cn/" target="_blank">豫ICP备2023034485号-1</a>
@@ -423,6 +425,8 @@ console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5p
 <script>
 document.getElementById("pathHome").setAttribute("d",IconList["home"]);
 document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
 
 function openComments(){
     cm=document.getElementById("comments");

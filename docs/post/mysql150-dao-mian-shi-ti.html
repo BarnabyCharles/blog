@@ -734,7 +734,7 @@ EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class
 <p><strong>语法分析</strong></p>
 <p>语法分析主要是把输入转化成若干个tokens，包含key和非key。</p>
 <p>在分析之后，会得到4个Token，其中有2个key，它们分别是SELECT、FROM。</p>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>key</th>
@@ -751,7 +751,7 @@ EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class
 <td>user</td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <ul>
 <li>典型的解析树如下：</li>
 </ul>
@@ -902,7 +902,7 @@ EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class
 <p>有兴趣可以参考官方文档：<a href="https://dev.mysql.com/doc/dev/mysql-server/latest/" rel="nofollow">https://dev.mysql.com/doc/dev/mysql-server/latest/</a></p>
 <h3>059 MyISAM 和 InnoDB 的区别是什么？</h3>
 <p>外键 事务 锁</p>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th><strong>对比项</strong></th>
@@ -952,7 +952,7 @@ EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class
 <td>N</td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <h4>060 	具体说一下如何做技术选型</h4>
 <p>除非几乎没有写操作全部都是高频的读操作可以选择MyISAM作为表的存储引擎，其他业务可以一律使用InnoDB。</p>
 <h2>三 mysql 事务</h2>
@@ -1456,7 +1456,7 @@ LongBlob 4G 值的长度加上用于记录长度的4个字节(32位)。</p>
 对于TIMESTAMP，它把客户端插入的时间从当前时区转化为UTC（世界标准时间）进行存储。查询时，将其又转化为客户端当前时区进行返回。<br>
 而对于DATETIME，不做任何改变，基本上是原样输入和输出。</p>
 <p>2、存储字节大小不同</p>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>数据类型</th>
@@ -1476,8 +1476,8 @@ LongBlob 4G 值的长度加上用于记录长度的4个字节(32位)。</p>
 <td>4 bytes + 小数秒存储</td>
 </tr>
 </tbody>
-</table>
-<table role="table">
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>分秒数精度</th>
@@ -1502,7 +1502,7 @@ LongBlob 4G 值的长度加上用于记录长度的4个字节(32位)。</p>
 <td>3 bytes</td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <p>3、两者所能存储的时间范围不一样:<br>
 timestamp所能存储的时间范围为：'1970-01-01 00:00:01.000000' 到 '2038-01-19 03:14:07.999999'。<br>
 datetime所能存储的时间范围为：'1000-01-01 00:00:00.000000' 到 '9999-12-31 23:59:59.999999'。</p>

@@ -41,7 +41,7 @@ MySQL中索引分三类：B+树索引、Hash索引、全文索引
 <meta property="og:url" content="http://tst.lingdyl.cn/post/mysql150-dao-mian-shi-ti.html">
 <meta property="og:image" content="https://img0.baidu.com/it/u=832630795,3892809214&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1713286800&t=9552039a9805a2440c7e05e97cff1059">
 <title>mysql150道面试题</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -147,8 +147,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h3>004 说一下B+树索引实现原理（数据结构）</h3>
 <h4>讲义</h4>
 <p>假设有一个表index_demo，表中有2个INT类型的列，1个CHAR(1)类型的列，c1列为主键：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">CREATE TABLE index_demo(c1 INT,c2 INT,c3 CHAR(1),PRIMARY KEY(c1)) ;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">index_demo</span>(c1 <span class="pl-k">INT</span>,c2 <span class="pl-k">INT</span>,c3 <span class="pl-k">CHAR</span>(<span class="pl-c1">1</span>),<span class="pl-k">PRIMARY KEY</span>(c1)) ;</pre></div>
 <p>index_demo表的简化的行格式示意图如下：</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220709071051043.png"><img src="image-20220709071051043.png" alt="image-20220709071051043" style="max-width: 100%;"></a></p>
 <p>我们只在示意图里展示记录的这几个部分：</p>
@@ -453,32 +452,30 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <ul>
 <li>随表一起创建索引：</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">CREATE TABLE customer (
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">customer</span> (
     
-  id INT UNSIGNED AUTO_INCREMENT,
-  customer_no VARCHAR(200),
-  customer_name VARCHAR(200),
+  id <span class="pl-k">INT</span> UNSIGNED AUTO_INCREMENT,
+  customer_no <span class="pl-k">VARCHAR</span>(<span class="pl-c1">200</span>),
+  customer_name <span class="pl-k">VARCHAR</span>(<span class="pl-c1">200</span>),
     
-  PRIMARY KEY(id), -- 主键索引：列设定为主键后会自动建立索引，唯一且不能为空。
-  UNIQUE INDEX uk_no (customer_no), -- 唯一索引：索引列值必须唯一，允许有NULL值，且NULL可能会出现多次。
-  KEY idx_name (customer_name), -- 普通索引：既不是主键，列值也不需要唯一，单纯的为了提高查询速度而创建。
-  KEY idx_no_name (customer_no,customer_name) -- 复合索引：即一个索引包含多个列。
-);
-</code></pre>
+  <span class="pl-k">PRIMARY KEY</span>(id), <span class="pl-c"><span class="pl-c">--</span> 主键索引：列设定为主键后会自动建立索引，唯一且不能为空。</span>
+  UNIQUE INDEX uk_no (customer_no), <span class="pl-c"><span class="pl-c">--</span> 唯一索引：索引列值必须唯一，允许有NULL值，且NULL可能会出现多次。</span>
+  KEY idx_name (customer_name), <span class="pl-c"><span class="pl-c">--</span> 普通索引：既不是主键，列值也不需要唯一，单纯的为了提高查询速度而创建。</span>
+  KEY idx_no_name (customer_no,customer_name) <span class="pl-c"><span class="pl-c">--</span> 复合索引：即一个索引包含多个列。</span>
+);</pre></div>
 <ul>
 <li>单独建创索引：</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">CREATE TABLE customer1 (
-  id INT UNSIGNED,
-  customer_no VARCHAR(200),
-  customer_name VARCHAR(200)
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">customer1</span> (
+  id <span class="pl-k">INT</span> UNSIGNED,
+  customer_no <span class="pl-k">VARCHAR</span>(<span class="pl-c1">200</span>),
+  customer_name <span class="pl-k">VARCHAR</span>(<span class="pl-c1">200</span>)
 );
 
-ALTER TABLE customer1 ADD PRIMARY KEY customer1(id); -- 主键索引
-CREATE UNIQUE INDEX uk_no ON customer1(customer_no); -- 唯一索引
-CREATE INDEX idx_name ON customer1(customer_name);  -- 普通索引
-CREATE INDEX idx_no_name ON customer1(customer_no,customer_name); -- 复合索引
-</code></pre>
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> customer1 ADD <span class="pl-k">PRIMARY KEY</span> customer1(id); <span class="pl-c"><span class="pl-c">--</span> 主键索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">UNIQUE INDEX</span> <span class="pl-en">uk_no</span> <span class="pl-k">ON</span> customer1(customer_no); <span class="pl-c"><span class="pl-c">--</span> 唯一索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_name</span> <span class="pl-k">ON</span> customer1(customer_name);  <span class="pl-c"><span class="pl-c">--</span> 普通索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_no_name</span> <span class="pl-k">ON</span> customer1(customer_no,customer_name); <span class="pl-c"><span class="pl-c">--</span> 复合索引</span></pre></div>
 <h4>031 唯一索引是否影响性能？</h4>
 <p>是</p>
 <h4>032 什么时候使用唯一索引？</h4>
@@ -568,19 +565,17 @@ EXPLAIN SELECT SQL_NO_CACHE * FROM emp WHERE emp.name &lt;&gt; 'abc' ; --索引�
 EXPLAIN SELECT * FROM emp WHERE emp.name IS NOT NULL; --索引失效
 </code></pre>
 <p>**注意：**当数据库中的数据的索引列的<code class="notranslate">NULL值达到比较高的比例的时候</code>，即使在IS NOT NULL 的情况下 MySQL的查询优化器会选择使用索引，<code class="notranslate">此时type的值是range（范围查询）</code></p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 将 id&gt;20000 的数据的 name 值改为 NULL
-UPDATE emp SET `name` = NULL WHERE `id` &gt; 20000;
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 将 id&gt;20000 的数据的 name 值改为 NULL</span>
+<span class="pl-k">UPDATE</span> emp <span class="pl-k">SET</span> <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-k">NULL</span> <span class="pl-k">WHERE</span> <span class="pl-s"><span class="pl-pds">`</span>id<span class="pl-pds">`</span></span> <span class="pl-k">&gt;</span> <span class="pl-c1">20000</span>;
 
--- 执行查询分析，可以发现 IS NOT NULL 使用了索引
--- 具体多少条记录的值为NULL可以使索引在IS NOT NULL的情况下生效，由查询优化器的算法决定
-EXPLAIN SELECT * FROM emp WHERE emp.name IS NOT NULL
-</code></pre>
+<span class="pl-c"><span class="pl-c">--</span> 执行查询分析，可以发现 IS NOT NULL 使用了索引</span>
+<span class="pl-c"><span class="pl-c">--</span> 具体多少条记录的值为NULL可以使索引在IS NOT NULL的情况下生效，由查询优化器的算法决定</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> emp <span class="pl-k">WHERE</span> <span class="pl-c1">emp</span>.<span class="pl-c1">name</span> <span class="pl-k">IS NOT NULL</span></pre></div>
 <ul>
 <li>类型转换导致索引失效</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM emp WHERE name='123'; 
-EXPLAIN SELECT * FROM emp WHERE name= 123; --索引失效
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> emp <span class="pl-k">WHERE</span> name<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>123<span class="pl-pds">'</span></span>; 
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> emp <span class="pl-k">WHERE</span> name<span class="pl-k">=</span> <span class="pl-c1">123</span>; <span class="pl-c"><span class="pl-c">--</span>索引失效</span></pre></div>
 <ul>
 <li>复合索引未用左列字段失效</li>
 <li>如果mysql觉得全表扫描更快时（数据少）;</li>
@@ -692,13 +687,12 @@ set session optimizer_trace="enabled=off";
 EXPLAIN SELECT * FROM emp WHERE emp.name IS NOT NULL; --索引失效
 </code></pre>
 <p>**注意：**当数据库中的数据的索引列的<code class="notranslate">NULL值达到比较高的比例的时候</code>，即使在IS NOT NULL 的情况下 MySQL的查询优化器会选择使用索引，<code class="notranslate">此时type的值是range（范围查询）</code></p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 将 id&gt;20000 的数据的 name 值改为 NULL
-UPDATE emp SET `name` = NULL WHERE `id` &gt; 20000;
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 将 id&gt;20000 的数据的 name 值改为 NULL</span>
+<span class="pl-k">UPDATE</span> emp <span class="pl-k">SET</span> <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-k">NULL</span> <span class="pl-k">WHERE</span> <span class="pl-s"><span class="pl-pds">`</span>id<span class="pl-pds">`</span></span> <span class="pl-k">&gt;</span> <span class="pl-c1">20000</span>;
 
--- 执行查询分析，可以发现 IS NOT NULL 使用了索引
--- 具体多少条记录的值为NULL可以使索引在IS NOT NULL的情况下生效，由查询优化器的算法决定
-EXPLAIN SELECT * FROM emp WHERE emp.name IS NOT NULL
-</code></pre>
+<span class="pl-c"><span class="pl-c">--</span> 执行查询分析，可以发现 IS NOT NULL 使用了索引</span>
+<span class="pl-c"><span class="pl-c">--</span> 具体多少条记录的值为NULL可以使索引在IS NOT NULL的情况下生效，由查询优化器的算法决定</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> emp <span class="pl-k">WHERE</span> <span class="pl-c1">emp</span>.<span class="pl-c1">name</span> <span class="pl-k">IS NOT NULL</span></pre></div>
 <h4>046  		有字段为null索引是否会失效？</h4>
 <p>不一定会失效，每一条sql具体有没有使用索引 可以通过trace追踪一下</p>
 <p>最好还是给上默认值</p>
@@ -803,13 +797,11 @@ EXPLAIN SELECT * FROM emp WHERE emp.name IS NOT NULL
 <p>在优化器阶段<strong>Optimizer：查询优化器：</strong></p>
 <h3>054 MySQL 支持哪些存储引擎？默认使用哪个？</h3>
 <p>查看MySQL提供什么存储引擎</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">SHOW ENGINES;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">SHOW ENGINES;</pre></div>
 <p>下面的结果表示MySQL中默认使用的存储引擎是InnoDB，支持事务，行锁，外键，支持分布式事务(XA)，支持保存点(回滚)</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220703164220030.png"><img src="image-20220703164220030.png" alt="image-20220703164220030" style="max-width: 100%;"></a></p>
 <p>也可以通过以下语句查看默认的存储引擎：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">SHOW VARIABLES LIKE '%default_storage_engine%';
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">SHOW VARIABLES <span class="pl-k">LIKE</span> <span class="pl-s"><span class="pl-pds">'</span>%default_storage_engine%<span class="pl-pds">'</span></span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220703170334348.png"><img src="image-20220703170334348.png" alt="image-20220703170334348" style="max-width: 100%;"></a></p>
 <h3>055 Mysql8.0自带哪些存储引擎？分别是做什么的？</h3>
 <p><code class="notranslate">1. InnoDB存储引擎</code></p>
@@ -908,17 +900,15 @@ EXPLAIN SELECT * FROM emp WHERE emp.name IS NOT NULL
 <h3></h3>
 <p><code class="notranslate">方法1：</code></p>
 <p>设置默认存储引擎：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">SET DEFAULT_STORAGE_ENGINE=MyISAM;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SET</span> DEFAULT_STORAGE_ENGINE<span class="pl-k">=</span>MyISAM;</pre></div>
 <p><code class="notranslate">方法2：</code></p>
 <p>或者修改 my.cnf 文件：vim /etc/my.cnf<br>
 新增一行：default-storage-engine=MyISAM<br>
 重启MySQL：systemctl restart mysqld</p>
 <p><code class="notranslate">方法3：</code></p>
 <p>我们可以为 不同的表设置不同的存储引擎</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">CREATE TABLE 表名( 建表语句; ) ENGINE = 存储引擎名称;
-ALTER TABLE 表名 ENGINE = 存储引擎名称;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">CREATE TABLE 表名( 建表语句; ) ENGINE <span class="pl-k">=</span> 存储引擎名称;
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> 表名 ENGINE <span class="pl-k">=</span> 存储引擎名称;</pre></div>
 <h4>058 	阿里、京东等大厂都有自研的存储引擎，如何开发一套自己的？</h4>
 <p>开发存储引擎并不难，难的是开发出来高效的有意义的存储引擎。</p>
 <p>简单例子可以看一下官方源码中的示例，可以实现一个什么也没做的存储引擎。</p>
@@ -1034,12 +1024,11 @@ ALTER TABLE 表名 ENGINE = 存储引擎名称;
 <p>避免事务并发问题是需要付出性能代价的，此时和分布式系统设计一样（CAP定理及base理论），为了保证一致性就一定会牺牲性能，要做取舍</p>
 <p>在mysql内部通过加锁的方式实现好了解决方案可供选择，就是配置事务隔离级别</p>
 <h4>070	什么是事务隔离级别？</h4>
-<pre lang="pgsql" class="notranslate"><code class="notranslate">事务隔离级别                    脏读     不可重复读(被修改)    幻读（删减）
-读未提交（read-uncommitted）    是        是            是
-不可重复读（read-committed）    否        是            是
-可重复读（repeatable-read）     否        否            是
-串行化（serializable）          否        否            否
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">事务隔离级别                    脏读     不可重复读(被修改)    幻读（删减）
+读未提交（read<span class="pl-k">-</span>uncommitted）    是        是            是
+不可重复读（read<span class="pl-k">-</span>committed）    否        是            是
+可重复读（repeatable<span class="pl-k">-</span>read）     否        否            是
+串行化（serializable）          否        否            否</pre></div>
 <h4>071	默认的级别是什么？</h4>
 <p><code class="notranslate">MySQL InnoDB</code>存储引擎默认的事务隔离级别是<strong>可重复读（REPEATABLE-READ）</strong></p>
 <pre class="notranslate"><code class="notranslate">MySQL 5.7 SELECT @@tx_isolation;
@@ -1656,10 +1645,9 @@ datetime所能存储的时间范围为：'1000-01-01 00:00:00.000000' 到 '9999-
 <p>慢查询日志记录long_query_time时间</p>
 </li>
 </ol>
-<pre lang="sql" class="notranslate"><code class="notranslate">SHOW VARIABLES LIKE '%long_query_time%';
+<div class="highlight highlight-source-sql"><pre class="notranslate">SHOW VARIABLES <span class="pl-k">LIKE</span> <span class="pl-s"><span class="pl-pds">'</span>%long_query_time%<span class="pl-pds">'</span></span>;
 
-SHOW GLOBAL VARIABLES LIKE 'long_query_time';
-</code></pre>
+SHOW GLOBAL VARIABLES <span class="pl-k">LIKE</span> <span class="pl-s"><span class="pl-pds">'</span>long_query_time<span class="pl-pds">'</span></span>;</pre></div>
 <p>l 全局变量设置，对所有客户端有效。但，必须是设置后进行登录的客户端。</p>
 <p>SET GLOBAL long_query_time=0.1;</p>
 <p>l 对当前会话连接立即生效，对其他客户端无效。</p>
@@ -1741,67 +1729,59 @@ a)   mysqldumpslow --help
 <p>使用EXPLAIN关键字可以<code class="notranslate">模拟优化器执行SQL查询语句</code>，从而知道MySQL是如何处理你的SQL语句的。<code class="notranslate">分析你的查询语句或是表结构的性能瓶颈</code>。</p>
 <h3>EXPLAIN的用法</h3>
 <p><strong>用法：</strong></p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN + SQL语句
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">+</span> SQL语句</pre></div>
 <p><strong>数据准备：</strong></p>
-<pre lang="sql" class="notranslate"><code class="notranslate">USE atguigudb;
+<div class="highlight highlight-source-sql"><pre class="notranslate">USE atguigudb;
  
-CREATE TABLE t1(id INT(10) AUTO_INCREMENT, content VARCHAR(100) NULL, PRIMARY KEY (id));
-CREATE TABLE t2(id INT(10) AUTO_INCREMENT, content VARCHAR(100) NULL, PRIMARY KEY (id));
-CREATE TABLE t3(id INT(10) AUTO_INCREMENT, content VARCHAR(100) NULL, PRIMARY KEY (id));
-CREATE TABLE t4(id INT(10) AUTO_INCREMENT, content1 VARCHAR(100) NULL, content2 VARCHAR(100) NULL, PRIMARY KEY (id));
+<span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">t1</span>(id <span class="pl-k">INT</span>(<span class="pl-c1">10</span>) AUTO_INCREMENT, content <span class="pl-k">VARCHAR</span>(<span class="pl-c1">100</span>) <span class="pl-k">NULL</span>, <span class="pl-k">PRIMARY KEY</span> (id));
+<span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">t2</span>(id <span class="pl-k">INT</span>(<span class="pl-c1">10</span>) AUTO_INCREMENT, content <span class="pl-k">VARCHAR</span>(<span class="pl-c1">100</span>) <span class="pl-k">NULL</span>, <span class="pl-k">PRIMARY KEY</span> (id));
+<span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">t3</span>(id <span class="pl-k">INT</span>(<span class="pl-c1">10</span>) AUTO_INCREMENT, content <span class="pl-k">VARCHAR</span>(<span class="pl-c1">100</span>) <span class="pl-k">NULL</span>, <span class="pl-k">PRIMARY KEY</span> (id));
+<span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">t4</span>(id <span class="pl-k">INT</span>(<span class="pl-c1">10</span>) AUTO_INCREMENT, content1 <span class="pl-k">VARCHAR</span>(<span class="pl-c1">100</span>) <span class="pl-k">NULL</span>, content2 <span class="pl-k">VARCHAR</span>(<span class="pl-c1">100</span>) <span class="pl-k">NULL</span>, <span class="pl-k">PRIMARY KEY</span> (id));
 
-CREATE INDEX idx_content1 ON t4(content1);  -- 普通索引
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_content1</span> <span class="pl-k">ON</span> t4(content1);  <span class="pl-c"><span class="pl-c">--</span> 普通索引</span>
 
-# 以下新增sql多执行几次，以便演示
-INSERT INTO t1(content) VALUES(CONCAT('t1_',FLOOR(1+RAND()*1000)));
-INSERT INTO t2(content) VALUES(CONCAT('t2_',FLOOR(1+RAND()*1000)));
-INSERT INTO t3(content) VALUES(CONCAT('t3_',FLOOR(1+RAND()*1000)));
-INSERT INTO t4(content1, content2) VALUES(CONCAT('t4_',FLOOR(1+RAND()*1000)), CONCAT('t4_',FLOOR(1+RAND()*1000)));
-
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 以下新增sql多执行几次，以便演示</span>
+<span class="pl-k">INSERT INTO</span> t1(content) <span class="pl-k">VALUES</span>(CONCAT(<span class="pl-s"><span class="pl-pds">'</span>t1_<span class="pl-pds">'</span></span>,FLOOR(<span class="pl-c1">1</span><span class="pl-k">+</span>RAND()<span class="pl-k">*</span><span class="pl-c1">1000</span>)));
+<span class="pl-k">INSERT INTO</span> t2(content) <span class="pl-k">VALUES</span>(CONCAT(<span class="pl-s"><span class="pl-pds">'</span>t2_<span class="pl-pds">'</span></span>,FLOOR(<span class="pl-c1">1</span><span class="pl-k">+</span>RAND()<span class="pl-k">*</span><span class="pl-c1">1000</span>)));
+<span class="pl-k">INSERT INTO</span> t3(content) <span class="pl-k">VALUES</span>(CONCAT(<span class="pl-s"><span class="pl-pds">'</span>t3_<span class="pl-pds">'</span></span>,FLOOR(<span class="pl-c1">1</span><span class="pl-k">+</span>RAND()<span class="pl-k">*</span><span class="pl-c1">1000</span>)));
+<span class="pl-k">INSERT INTO</span> t4(content1, content2) <span class="pl-k">VALUES</span>(CONCAT(<span class="pl-s"><span class="pl-pds">'</span>t4_<span class="pl-pds">'</span></span>,FLOOR(<span class="pl-c1">1</span><span class="pl-k">+</span>RAND()<span class="pl-k">*</span><span class="pl-c1">1000</span>)), CONCAT(<span class="pl-s"><span class="pl-pds">'</span>t4_<span class="pl-pds">'</span></span>,FLOOR(<span class="pl-c1">1</span><span class="pl-k">+</span>RAND()<span class="pl-k">*</span><span class="pl-c1">1000</span>)));
+</pre></div>
 <h3>各字段解释</h3>
 <h4>table</h4>
 <ul>
 <li>**单表：**显示这一行的数据是关于哪张表的</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710101402666.png"><img src="image-20220710101402666.png" alt="image-20220710101402666" style="max-width: 100%;"></a></p>
 <ul>
 <li>**多表关联：**t1为驱动表，t2为被驱动表。</li>
 </ul>
 <p><code class="notranslate">注意：</code>内连接时，MySQL性能优化器会自动判断哪个表是驱动表，哪个表示被驱动表，和书写的顺序无关</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 INNER JOIN t2;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">INNER JOIN</span> t2;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220711122444380.png"><img src="image-20220711122444380.png" alt="image-20220711122444380" style="max-width: 100%;"></a></p>
 <h4>id</h4>
 <p>表示查询中执行select子句或操作表的顺序</p>
 <ul>
 <li>**id相同：**执行顺序由上至下</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1, t2, t3;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1, t2, t3;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710000757241.png"><img src="image-20220710000757241.png" alt="image-20220710000757241" style="max-width: 100%;"></a></p>
 <ul>
 <li>**id不同：**如果是子查询，id的序号会递增，id值越大优先级越高，越先被执行</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT t1.id FROM t1 WHERE t1.id =(
-  SELECT t2.id FROM t2 WHERE t2.id =(
-    SELECT t3.id FROM t3 WHERE t3.content = 't3_434'
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-c1">t1</span>.<span class="pl-c1">id</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span>(
+  <span class="pl-k">SELECT</span> <span class="pl-c1">t2</span>.<span class="pl-c1">id</span> <span class="pl-k">FROM</span> t2 <span class="pl-k">WHERE</span> <span class="pl-c1">t2</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span>(
+    <span class="pl-k">SELECT</span> <span class="pl-c1">t3</span>.<span class="pl-c1">id</span> <span class="pl-k">FROM</span> t3 <span class="pl-k">WHERE</span> <span class="pl-c1">t3</span>.<span class="pl-c1">content</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>t3_434<span class="pl-pds">'</span></span>
   )
-);
-</code></pre>
+);</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710000950098.png"><img src="image-20220710000950098.png" alt="image-20220710000950098" style="max-width: 100%;"></a></p>
 <p><code class="notranslate">注意：</code>查询优化器可能对涉及子查询的语句进行优化，<code class="notranslate">转为连接查询</code></p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 WHERE content IN (SELECT content FROM t2 WHERE content = 'a');
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> content <span class="pl-k">IN</span> (<span class="pl-k">SELECT</span> content <span class="pl-k">FROM</span> t2 <span class="pl-k">WHERE</span> content <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>);</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220711123408605.png"><img src="image-20220711123408605.png" alt="image-20220711123408605" style="max-width: 100%;"></a></p>
 <ul>
 <li>**id为NULL：**最后执行</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 UNION SELECT * FROM t2;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">UNION</span> <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t2;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710001512891.png"><img src="image-20220710001512891.png" alt="image-20220710001512891" style="max-width: 100%;"></a></p>
 <p><strong>小结：</strong></p>
 <ul>
@@ -1814,68 +1794,59 @@ INSERT INTO t4(content1, content2) VALUES(CONCAT('t4_',FLOOR(1+RAND()*1000)), CO
 <ul>
 <li>**SIMPLE：**简单查询。查询中不包含子查询或者UNION。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710001930811.png"><img src="image-20220710001930811.png" alt="image-20220710001930811" style="max-width: 100%;"></a></p>
 <ul>
 <li>**PRIMARY：**主查询。查询中若包含子查询，则最外层查询被标记为PRIMARY。</li>
 <li>**SUBQUERY：**子查询。在SELECT或WHERE列表中包含了子查询。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t3 WHERE id = ( SELECT id FROM t2 WHERE content= 'a');
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t3 <span class="pl-k">WHERE</span> id <span class="pl-k">=</span> ( <span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> t2 <span class="pl-k">WHERE</span> content<span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>);</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710002145309.png"><img src="image-20220710002145309.png" alt="image-20220710002145309" style="max-width: 100%;"></a></p>
 <ul>
 <li>**DEPENDENT SUBQUREY：**如果包含了子查询，并且查询语句不能被优化器转换为连接查询，并且子查询是<code class="notranslate">相关子查询（子查询基于外部数据列）</code>，则子查询就是DEPENDENT SUBQUREY。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t3 WHERE id = ( SELECT id FROM t2 WHERE content = t3.content);
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t3 <span class="pl-k">WHERE</span> id <span class="pl-k">=</span> ( <span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> t2 <span class="pl-k">WHERE</span> content <span class="pl-k">=</span> <span class="pl-c1">t3</span>.<span class="pl-c1">content</span>);</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710002444782.png"><img src="image-20220710002444782.png" alt="image-20220710002444782" style="max-width: 100%;"></a></p>
 <ul>
 <li>**UNCACHEABLE SUBQUREY：**表示这个subquery的查询要受到外部系统变量的影响</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t3 
-WHERE id = ( SELECT id FROM t2 WHERE content = @@character_set_server);
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t3 
+<span class="pl-k">WHERE</span> id <span class="pl-k">=</span> ( <span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> t2 <span class="pl-k">WHERE</span> content <span class="pl-k">=</span> @@character_set_server);</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710002604613.png"><img src="image-20220710002604613.png" alt="image-20220710002604613" style="max-width: 100%;"></a></p>
 <ul>
 <li>**UNION：**对于包含UNION或者UNION ALL的查询语句，除了最左边的查询是PRIMARY，其余的查询都是UNION。</li>
 <li>**UNION RESULT：**UNION会对查询结果进行查询去重，MYSQL会使用临时表来完成UNION查询的去重工作，针对这个临时表的查询就是"UNION RESULT"。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN 
-SELECT * FROM t3 WHERE id = 1 
-UNION  
-SELECT * FROM t2 WHERE id = 1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN 
+<span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t3 <span class="pl-k">WHERE</span> id <span class="pl-k">=</span> <span class="pl-c1">1</span> 
+<span class="pl-k">UNION</span>  
+<span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t2 <span class="pl-k">WHERE</span> id <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710003049587.png"><img src="image-20220710003049587.png" alt="image-20220710003049587" style="max-width: 100%;"></a></p>
 <ul>
 <li>**DEPENDENT UNION：**子查询中的UNION或者UNION ALL，除了最左边的查询是DEPENDENT SUBQUREY，其余的查询都是DEPENDENT UNION。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate"> EXPLAIN SELECT * FROM t1 WHERE content IN
+<div class="highlight highlight-source-sql"><pre class="notranslate"> EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> content <span class="pl-k">IN</span>
  (
- SELECT content FROM t2 
- UNION 
- SELECT content FROM t3
- );
-</code></pre>
+ <span class="pl-k">SELECT</span> content <span class="pl-k">FROM</span> t2 
+ <span class="pl-k">UNION</span> 
+ <span class="pl-k">SELECT</span> content <span class="pl-k">FROM</span> t3
+ );</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710110732730.png"><img src="image-20220710110732730.png" alt="image-20220710110732730" style="max-width: 100%;"></a></p>
 <ul>
 <li>**DERIVED：**在包含<code class="notranslate">派生表（子查询在from子句中）</code>的查询中，MySQL会递归执行这些子查询，把结果放在临时表里。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM (
-   SELECT content, COUNT(*) AS c FROM t1 GROUP BY content
-) AS derived_t1 WHERE c &gt; 1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> (
+   <span class="pl-k">SELECT</span> content, <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">AS</span> c <span class="pl-k">FROM</span> t1 <span class="pl-k">GROUP BY</span> content
+) <span class="pl-k">AS</span> derived_t1 <span class="pl-k">WHERE</span> c <span class="pl-k">&gt;</span> <span class="pl-c1">1</span>;</pre></div>
 <p>这里的<code class="notranslate">&lt;derived2&gt;</code>就是在id为2的查询中产生的派生表。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710153504037.png"><img src="image-20220710153504037.png" alt="image-20220710153504037" style="max-width: 100%;"></a></p>
 <p>**补充：**MySQL在处理带有派生表的语句时，优先尝试把派生表和外层查询进行合并，如果不行，再把派生表<code class="notranslate">物化掉（执行子查询，并把结果放入临时表）</code>，然后执行查询。下面的例子就是就是将派生表和外层查询进行合并的例子：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM (SELECT * FROM t1 WHERE content = 't1_832') AS derived_t1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> (<span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> content <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>t1_832<span class="pl-pds">'</span></span>) <span class="pl-k">AS</span> derived_t1;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710153921679.png"><img src="image-20220710153921679.png" alt="image-20220710153921679" style="max-width: 100%;"></a></p>
 <ul>
 <li>**MATERIALIZED：**优化器对于包含子查询的语句，<code class="notranslate">如果选择将子查询物化后再与外层查询连接查询</code>，该子查询的类型就是MATERIALIZED。如下的例子中，查询优化器先将子查询转换成物化表，然后将t1和物化表进行连接查询。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate"> EXPLAIN SELECT * FROM t1 WHERE content IN (SELECT content FROM t2);
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"> EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> content <span class="pl-k">IN</span> (<span class="pl-k">SELECT</span> content <span class="pl-k">FROM</span> t2);</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710155650935.png"><img src="image-20220710155650935.png" alt="image-20220710155650935" style="max-width: 100%;"></a></p>
 <h4>partitions</h4>
 <p>代表分区表中的命中情况，非分区表，该项为NULL</p>
@@ -1891,77 +1862,65 @@ SELECT * FROM t2 WHERE id = 1;
 <ul>
 <li>**ALL：**全表扫描。Full Table Scan，将遍历全表以找到匹配的行</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712065946659.png"><img src="image-20220712065946659.png" alt="image-20220712065946659" style="max-width: 100%;"></a></p>
 <ul>
 <li>**index：**当使用<code class="notranslate">覆盖索引</code>，但需要扫描全部的索引记录时</li>
 </ul>
 <p><code class="notranslate">覆盖索引：</code>如果能通过读取索引就可以得到想要的数据，那就不需要读取用户记录，或者不用再做回表操作了。一个索引包含了满足查询结果的数据就叫做覆盖索引。</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 只需要读取聚簇索引部分的非叶子节点，就可以得到id的值，不需要查询叶子节点
-EXPLAIN SELECT id FROM t1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 只需要读取聚簇索引部分的非叶子节点，就可以得到id的值，不需要查询叶子节点</span>
+EXPLAIN <span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> t1;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712065815768.png"><img src="image-20220712065815768.png" alt="image-20220712065815768" style="max-width: 100%;"></a></p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 只需要读取二级索引，就可以在二级索引中获取到想要的数据，不需要再根据叶子节点中的id做回表操作
-EXPLAIN SELECT id, deptId FROM t_emp;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 只需要读取二级索引，就可以在二级索引中获取到想要的数据，不需要再根据叶子节点中的id做回表操作</span>
+EXPLAIN <span class="pl-k">SELECT</span> id, deptId <span class="pl-k">FROM</span> t_emp;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712065922882.png"><img src="image-20220712065922882.png" alt="image-20220712065922882" style="max-width: 100%;"></a></p>
 <ul>
 <li>**range：**只检索给定范围的行，使用一个索引来选择行。key 列显示使用了哪个索引，一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询。这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束于另一点，不用扫描全部索引。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 WHERE id IN (1, 2, 3);
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> id <span class="pl-k">IN</span> (<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>);</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712070042666.png"><img src="image-20220712070042666.png" alt="image-20220712070042666" style="max-width: 100%;"></a></p>
 <ul>
 <li>**ref：**通过普通二级索引列与常量进行等值匹配时</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t_emp WHERE deptId = 1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> deptId <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712070727963.png"><img src="image-20220712070727963.png" alt="image-20220712070727963" style="max-width: 100%;"></a></p>
 <ul>
 <li>**eq_ref：**连接查询时通过主键或不允许NULL值的唯一二级索引列进行等值匹配时</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1, t2 WHERE t1.id = t2.id;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1, t2 <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">id</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712070851089.png"><img src="image-20220712070851089.png" alt="image-20220712070851089" style="max-width: 100%;"></a></p>
 <ul>
 <li>**const：**根据<code class="notranslate">主键</code>或者<code class="notranslate">唯一二级索引</code>列与<code class="notranslate">常数</code>进行匹配时</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 WHERE id = 1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> id <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712070944090.png"><img src="image-20220712070944090.png" alt="image-20220712070944090" style="max-width: 100%;"></a></p>
 <ul>
 <li>**system：**MyISAM引擎中，当表中只有一条记录时。<code class="notranslate">（这是所有type的值中性能最高的场景）</code></li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">CREATE TABLE t(i int) Engine=MyISAM;
-INSERT INTO t VALUES(1);
-EXPLAIN SELECT * FROM t;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">t</span>(i <span class="pl-k">int</span>) Engine<span class="pl-k">=</span>MyISAM;
+<span class="pl-k">INSERT INTO</span> t <span class="pl-k">VALUES</span>(<span class="pl-c1">1</span>);
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220711125730163.png"><img src="image-20220711125730163.png" alt="image-20220711125730163" style="max-width: 100%;"></a></p>
 <p><strong>其他不太常见的类型（了解）：</strong></p>
 <ul>
 <li><strong>index_subquery</strong>：利用<code class="notranslate">普通索引</code>来关联子查询，针对包含有IN子查询的查询语句。<code class="notranslate">content1是普通索引字段</code></li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 WHERE content IN (SELECT content1 FROM t4 WHERE t1.content = t4.content2) OR content = 'a';
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> content <span class="pl-k">IN</span> (<span class="pl-k">SELECT</span> content1 <span class="pl-k">FROM</span> t4 <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">content</span> <span class="pl-k">=</span> <span class="pl-c1">t4</span>.<span class="pl-c1">content2</span>) <span class="pl-k">OR</span> content <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712071057817.png"><img src="image-20220712071057817.png" alt="image-20220712071057817" style="max-width: 100%;"></a></p>
 <ul>
 <li><strong>unique_subquery</strong>：类似于index_subquery，利用<code class="notranslate">唯一索引</code>来关联子查询。<code class="notranslate">t2的id是主键，也可以理解为唯一的索引字段</code></li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 WHERE id IN (SELECT id FROM t2 WHERE t1.content = t2.content) OR content = 'a';
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> id <span class="pl-k">IN</span> (<span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> t2 <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">content</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">content</span>) <span class="pl-k">OR</span> content <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712071138320.png"><img src="image-20220712071138320.png" alt="image-20220712071138320" style="max-width: 100%;"></a></p>
 <ul>
 <li><strong>index_merge</strong>：在查询过程中需要<code class="notranslate">多个索引组合使用</code>，通常出现在有 or 的关键字的sql中。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t_emp WHERE deptId = 1 OR id = 1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> deptId <span class="pl-k">=</span> <span class="pl-c1">1</span> <span class="pl-k">OR</span> id <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220711132125501.png"><img src="image-20220711132125501.png" alt="image-20220711132125501" style="max-width: 100%;"></a></p>
 <ul>
 <li><strong>ref_or_null</strong>：当对普通二级索引进行等值匹配，且该索引列的值也可以是NULL值时。</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t_emp WHERE deptId = 1 OR deptId IS NULL;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> deptId <span class="pl-k">=</span> <span class="pl-c1">1</span> <span class="pl-k">OR</span> deptId IS <span class="pl-k">NULL</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220711131831315.png"><img src="image-20220711131831315.png" alt="image-20220711131831315" style="max-width: 100%;"></a></p>
 <ul>
 <li>**fulltext：**全文索引。<code class="notranslate">一般通过搜索引擎实现，这里我们不展开。</code></li>
@@ -1975,8 +1934,7 @@ EXPLAIN SELECT * FROM t;
 <p><code class="notranslate">keys</code>表示实际使用的索引。如果为NULL，则没有使用索引。</p>
 </li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT id FROM t1 WHERE id = 1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> t1 <span class="pl-k">WHERE</span> id <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710142152514.png"><img src="image-20220710142152514.png" alt="image-20220710142152514" style="max-width: 100%;"></a></p>
 <h4>key_len <strong>☆</strong></h4>
 <p>表示索引使用的字节数，根据这个值可以判断索引的使用情况，<code class="notranslate">检查是否充分利用了索引，针对联合索引值越大越好。</code></p>
@@ -1987,81 +1945,70 @@ EXPLAIN SELECT * FROM t;
 <li>varchar这种动态字符串要加2个字节</li>
 <li>允许为空的字段要加1个字节</li>
 </ol>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 创建索引
-CREATE INDEX idx_age_name ON t_emp(age, `name`);
--- 测试1
-EXPLAIN SELECT * FROM t_emp WHERE age = 30 AND `name` = 'ab%';
--- 测试2
-EXPLAIN SELECT * FROM t_emp WHERE age = 30;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 创建索引</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_age_name</span> <span class="pl-k">ON</span> t_emp(age, <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span>);
+<span class="pl-c"><span class="pl-c">--</span> 测试1</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> age <span class="pl-k">=</span> <span class="pl-c1">30</span> <span class="pl-k">AND</span> <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>ab%<span class="pl-pds">'</span></span>;
+<span class="pl-c"><span class="pl-c">--</span> 测试2</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> age <span class="pl-k">=</span> <span class="pl-c1">30</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710130548971.png"><img src="image-20220710130548971.png" alt="image-20220710130548971" style="max-width: 100%;"></a></p>
 <h4>ref</h4>
 <p>显示与key中的索引进行比较的列或常量。</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- ref=atguigudb.t1.id   关联查询时出现，t2表和t1表的哪一列进行关联
-EXPLAIN SELECT * FROM t1, t2 WHERE t1.id = t2.id;
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> ref=atguigudb.t1.id   关联查询时出现，t2表和t1表的哪一列进行关联</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1, t2 <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">id</span>;
 
--- ref=const  与索引列进行等值比较的东西是啥，const表示一个常数
-EXPLAIN SELECT * FROM t_emp WHERE age = 30;
-</code></pre>
+<span class="pl-c"><span class="pl-c">--</span> ref=const  与索引列进行等值比较的东西是啥，const表示一个常数</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> age <span class="pl-k">=</span> <span class="pl-c1">30</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220709211819944.png"><img src="image-20220709211819944.png" alt="image-20220709211819944" style="max-width: 100%;"></a></p>
 <h4>rows <strong>☆</strong></h4>
 <p>MySQL认为它执行查询时必须检查的行数。值越小越好。</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 如果是全表扫描，rows的值就是表中数据的估计行数
-EXPLAIN SELECT * FROM t_emp WHERE empno = '10001';
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 如果是全表扫描，rows的值就是表中数据的估计行数</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> empno <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>10001<span class="pl-pds">'</span></span>;
 
--- 如果是使用索引查询，rows的值就是预计扫描索引记录行数
-EXPLAIN SELECT * FROM t_emp WHERE deptId = 1;
-</code></pre>
+<span class="pl-c"><span class="pl-c">--</span> 如果是使用索引查询，rows的值就是预计扫描索引记录行数</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> deptId <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710131916240.png"><img src="image-20220710131916240.png" alt="image-20220710131916240" style="max-width: 100%;"></a></p>
 <h4>filtered</h4>
 <p>最后查询出来的数据占所有服务器端检查行数（rows）的<code class="notranslate">百分比</code>。值越大越好。</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 先根据二级索引deptId找到数据的主键，有3条记录满足条件，
--- 再根据主键进行回表，最终找到3条记录，有100%的记录满足条件
-EXPLAIN SELECT * FROM t_emp WHERE deptId = 1;
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 先根据二级索引deptId找到数据的主键，有3条记录满足条件，</span>
+<span class="pl-c"><span class="pl-c">--</span> 再根据主键进行回表，最终找到3条记录，有100%的记录满足条件</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> deptId <span class="pl-k">=</span> <span class="pl-c1">1</span>;
 
--- 这个例子如果name列是索引列则 filtered = 100 否则filtered = 10(全表扫描)
-EXPLAIN SELECT * FROM t_emp WHERE `name` = '风清扬';
-</code></pre>
+<span class="pl-c"><span class="pl-c">--</span> 这个例子如果name列是索引列则 filtered = 100 否则filtered = 10(全表扫描)</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>风清扬<span class="pl-pds">'</span></span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220709212722601.png"><img src="image-20220709212722601.png" alt="image-20220709212722601" style="max-width: 100%;"></a></p>
 <h4>Extra <strong>☆</strong></h4>
 <p>包含不适合在其他列中显示但十分重要的额外信息。通过这些额外信息来<code class="notranslate">理解MySQL到底将如何执行当前的查询语句</code>。MySQL提供的额外信息有好几十个，这里只挑介绍比较重要的介绍。</p>
 <ul>
 <li><strong>Impossible WHERE</strong>：where子句的值总是false</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t_emp WHERE 1 != 1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> <span class="pl-c1">1</span> <span class="pl-k">!=</span> <span class="pl-c1">1</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220709231638201.png"><img src="image-20220709231638201.png" alt="image-20220709231638201" style="max-width: 100%;"></a></p>
 <ul>
 <li>**Using where：**使用了where，但在where上有字段没有创建索引</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t_emp WHERE `name` = '风清扬';
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp <span class="pl-k">WHERE</span> <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>风清扬<span class="pl-pds">'</span></span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220709215122017.png"><img src="image-20220709215122017.png" alt="image-20220709215122017" style="max-width: 100%;"></a></p>
 <ul>
 <li>**Using temporary：**使了用临时表保存中间结果</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT DISTINCT content FROM t1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT DISTINCT</span> content <span class="pl-k">FROM</span> t1;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710181100102.png"><img src="image-20220710181100102.png" alt="image-20220710181100102" style="max-width: 100%;"></a></p>
 <ul>
 <li><strong>Using filesort：</strong></li>
 </ul>
 <p>在对查询结果中的记录进行排序时，是可以使用索引的，如下所示：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 ORDER BY id;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">ORDER BY</span> id;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710172607190.png"><img src="image-20220710172607190.png" alt="image-20220710172607190" style="max-width: 100%;"></a></p>
 <p>如果排序操作无法使用到索引，只能在内存中（记录较少时）或者磁盘中（记录较多时）进行排序（filesort），如下所示：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t1 ORDER BY content;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1 <span class="pl-k">ORDER BY</span> content;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710172926396.png"><img src="image-20220710172926396.png" alt="image-20220710172926396" style="max-width: 100%;"></a></p>
 <ul>
 <li>**Using index：**使用了覆盖索引，表示直接访问索引就足够获取到所需要的数据，不需要通过索引回表</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate"> EXPLAIN SELECT id, content1 FROM t4;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"> EXPLAIN <span class="pl-k">SELECT</span> id, content1 <span class="pl-k">FROM</span> t4;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712071716131.png"><img src="image-20220712071716131.png" alt="image-20220712071716131" style="max-width: 100%;"></a></p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT id FROM t1;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> t1;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712072055566.png"><img src="image-20220712072055566.png" alt="image-20220712072055566" style="max-width: 100%;"></a></p>
 <ul>
 <li>**Using index condition：**叫作  <code class="notranslate">Index Condition Pushdown Optimization （索引下推优化）</code>
@@ -2071,21 +2018,18 @@ EXPLAIN SELECT * FROM t_emp WHERE `name` = '风清扬';
 </ul>
 </li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- content1列上有索引idx_content1
-EXPLAIN SELECT * FROM t4 WHERE content1 &gt; 'z' AND content1 LIKE '%a';
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> content1列上有索引idx_content1</span>
+EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t4 <span class="pl-k">WHERE</span> content1 <span class="pl-k">&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>z<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> content1 <span class="pl-k">LIKE</span> <span class="pl-s"><span class="pl-pds">'</span>%a<span class="pl-pds">'</span></span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710180257692.png"><img src="image-20220710180257692.png" alt="image-20220710180257692" style="max-width: 100%;"></a></p>
 <p>**注意：**如果这里的查询条件<code class="notranslate">只有content1 &gt; 'z'</code>，那么找到满足条件的索引后也会进行一次索引下推的操作，判断content1 &gt; 'z'是否成立（这是源码中为了编程方便做的冗余判断）</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220712012108900.png"><img src="image-20220712012108900.png" alt="image-20220712012108900" style="max-width: 100%;"></a></p>
 <ul>
 <li>**Using join buffer：**在连接查询时，当被驱动表不能有效的利用索引时，MySQL会为其分配一块名为连接缓冲区（join buffer）的内存来加快查询速度</li>
 </ul>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN  SELECT * FROM t1, t2 WHERE t1.content = t2.content;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN  <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t1, t2 <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">content</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">content</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710182356817.png"><img src="image-20220710182356817.png" alt="image-20220710182356817" style="max-width: 100%;"></a></p>
 <p>下面这个例子就是被驱动表使用了索引：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">EXPLAIN SELECT * FROM t_emp, t_dept WHERE t_dept.id = t_emp.deptId;
-</code></pre>
+<div class="highlight highlight-source-sql"><pre class="notranslate">EXPLAIN <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> t_emp, t_dept <span class="pl-k">WHERE</span> <span class="pl-c1">t_dept</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">t_emp</span>.<span class="pl-c1">deptId</span>;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="image-20220710182524371.png"><img src="image-20220710182524371.png" alt="image-20220710182524371" style="max-width: 100%;"></a></p>
 <h3>133 MySQL数据库cpu飙升的话你会如何分析</h3>
 <p>重点是定位问题。</p>
